@@ -1,47 +1,26 @@
 var playerScore = 0;
 var computerScore = 0;
 
-
-//Starts the game
-game();
-
-//Game function that handles all the rounds in a game.
-function game()
-{
-    //Plays 5 rounds per game. Outpus each rounds winner to the console.
-    for (let i = 0; i < 5; i++) 
-    {
-        let playerSelection = "Rock"
-        let computerSelection = getComputerChoice();
-
-        //Output the winner of the round.
-        console.log("Round #" + (i+1) + ": " + playRound(playerSelection, computerSelection));
-    }
-    
-    //Check to see the winner of the game and output it.
-    checkWinner();
-}
-
-
 //This function handels what happens in each round and who wins the round.
 function playRound(playerSelection, computerSelection)
 {
-    switch (computerSelection) 
+    let result;
+    switch (computerSelection)
     {
         case "Rock":
             
             switch (playerSelection) 
             {
                 case "Rock":
-                    return "Tie"
+                    result = "Tie"
                     break;
                 case "Paper":
                     playerScore++;
-                    return "Win"
+                    result = "Win"
                     break;
                 case "Scissors":
                     computerScore++;
-                    return "Lose"
+                    result = "Lose"
                     break;
                 default:
                     break;
@@ -52,14 +31,14 @@ function playRound(playerSelection, computerSelection)
             {
                 case "Rock":
                     computerScore++;
-                    return "Lose"
+                    result = "Lose"
                     break;
                 case "Paper":
-                    return "Tie"
+                    result = "Tie"
                     break;
                 case "Scissors":
                     playerScore++;
-                    return "Win"
+                    result = "Win"
                     break;
             
                 default:
@@ -71,24 +50,26 @@ function playRound(playerSelection, computerSelection)
             {
                 case "Rock":
                     playerScore++;
-                    return "Win"
+                    result = "Win"
                     break;
                 case "Paper":
                     computerScore++;
-                    return "Lose"
+                    result = "Lose"
                     break;
                 case "Scissors":
-                    return "Tie"
+                    result = "Tie"
                     break;
                 default:
                     break;
             }
             break;
         default:
+            result = "ERROR";
             break;
     }
 
-    return "Null"
+    return "Player's " + playerSelection + " vs Computer's " + computerSelection + 
+            " = Player " + result;
 }
 
 //Randomly selects the computer choice.
@@ -108,22 +89,60 @@ function getComputerChoice()
             return "Scissors"
             break;
         default:
-            return "Null"
+            return "ERROR"
             break;
     }
 
-    return "Null";
+    return "ERROR";
+}
+
+function displayScoreBoard()
+{
+    return "Player Score: " + playerScore + " || " + "Computer's Score: " + computerScore;
 }
 
 //This handles checking to see who the winner is of the game.
 function checkWinner()
 {
-    if(playerScore > computerScore)
+    if(playerScore >= 5)
     {
-        console.log("The winner is: YOU! Congrats");
+        playerScore = computerScore = 0; //Set score to zero to start game over.
+        return "The winner is: YOU! Congrats";
     }
-    else
+    else if(computerScore >= 5)
     {
-        console.log("The winner is: THE COMPUTER! Better luck next time");
+        playerScore = computerScore = 0; //Set score to zero to start game over.
+        return "The winner is: THE COMPUTER! Better luck next time";
     }
 }
+
+//Page references
+const rockButton = document.querySelector(".rockButton");
+const paperButton = document.querySelector(".paperButton");
+const scissorsButton = document.querySelector(".scissorsButton");
+const scoreBoard = document.querySelector(".scoreBoard");
+const roundDisplay = document.querySelector(".roundDisplay");
+const gameResult = document.querySelector(".gameResult");
+
+//Add listeners to the buttons so we can figure out what the player has chosen.
+rockButton.addEventListener("click", function(e)
+{
+    //Player chose Rock
+    roundDisplay.textContent = playRound("Rock", getComputerChoice());
+    gameResult.textContent = checkWinner();
+    scoreBoard.textContent = displayScoreBoard();
+});
+paperButton.addEventListener("click", function(e)
+{
+    //Player chose Paper
+    roundDisplay.textContent = playRound("Paper", getComputerChoice());
+    gameResult.textContent = checkWinner();
+    scoreBoard.textContent = displayScoreBoard();
+});
+scissorsButton.addEventListener("click", function(e)
+{
+    //Player chose Scissors
+    roundDisplay.textContent = playRound("Scissors", getComputerChoice());
+    gameResult.textContent = checkWinner();
+    scoreBoard.textContent = displayScoreBoard();
+});
